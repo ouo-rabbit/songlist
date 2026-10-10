@@ -255,7 +255,7 @@ footer span{display:inline-block;padding:6px 18px;border-radius:999px;font-famil
       <div class="tools">
         <div class="search">
           <label class="field"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M13 13l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-            <input id="q" type="search" placeholder="搜尋歌名或歌手" autocomplete="off" aria-label="搜尋歌名或歌手" data-i18n-ph="search"></label>
+            <input id="q" type="search" placeholder="搜尋歌名、歌手或備註" autocomplete="off" aria-label="搜尋歌名、歌手或備註" data-i18n-ph="search"></label>
           <button class="btn" type="button" data-random><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0C11 7 13 9 20 10C13 11 11 13 10 20C9 13 7 11 0 10C7 9 9 7 10 0Z" fill="currentColor"/></svg><span data-i18n="random">抽一首</span></button>
         </div>
         <div class="sorts" id="sorts" role="group" aria-label="排序">
@@ -327,7 +327,7 @@ const T={
   zh:{docTitle:"兔子島點歌本",sideTitle:"歌單",motto:"沒在上面的歌，也可以問問看 ♪",catTitle:"歌單分類",chatTitle:"來聊天室點歌",
     twChat:"Twitch 聊天室",ytChat:"YouTube 聊天室",
     quote1:"點一下歌名，就會複製<b>「點歌 歌名」</b>",quote2:"貼到 Twitch 或 YouTube 聊天室就好",
-    donate:"♡點歌免費，但還是歡迎斗內唷(*´꒳`*)b",listTitle:"歌單",search:"搜尋歌名或歌手",random:"抽一首",
+    donate:"♡點歌免費，但還是歡迎斗內唷(*´꒳`*)b",listTitle:"歌單",search:"搜尋歌名、歌手或備註",random:"抽一首",
     sortSheet:"歌單順序",sortNew:"最新加入",sortTitle:"依歌名",sortArtist:"依歌手",thSong:"歌曲",thLang:"語言",thReq:"點歌",
     req:"點歌",all:"全部",allSongs:"全部歌曲",empty:"找不到這首，可以直接在聊天室問問看 ♡",
     pickTitle:"不知道點什麼？",pickIdle:"讓兔子幫你抽一首",pickIdleSub:"抽到的歌會自動複製",pickBtn:"抽一首",pickAgain:"再抽一首",copyAgain:"再複製一次",
@@ -338,7 +338,7 @@ const T={
   en:{docTitle:"ouo_rabbit Song List",sideTitle:"Songs",motto:"Don't see a song? Feel free to ask ♪",catTitle:"Categories",chatTitle:"Request in chat",
     twChat:"Twitch chat",ytChat:"YouTube chat",
     quote1:"Tap a song to copy <b>「點歌 title」</b>",quote2:"Paste it into Twitch or YouTube chat",
-    donate:"♡ Requests are free, but tips are always welcome (*´꒳`*)b",listTitle:"Song List",search:"Search songs or artists",random:"Random",
+    donate:"♡ Requests are free, but tips are always welcome (*´꒳`*)b",listTitle:"Song List",search:"Search songs, artists or notes",random:"Random",
     sortSheet:"Default",sortNew:"Newest",sortTitle:"Title",sortArtist:"Artist",thSong:"Song",thLang:"Language",thReq:"Request",
     req:"Request",all:"All",allSongs:"All songs",empty:"Can't find it? Just ask in chat ♡",
     pickTitle:"Can't decide?",pickIdle:"Let the bunny pick one for you",pickIdleSub:"The pick is copied automatically",pickBtn:"Pick a song",pickAgain:"Pick again",copyAgain:"Copy again",
@@ -349,7 +349,7 @@ const T={
   ja:{docTitle:"ouo_rabbit 歌リスト",sideTitle:"歌リスト",motto:"リストにない曲も気軽に聞いてね ♪",catTitle:"カテゴリー",chatTitle:"チャットでリクエスト",
     twChat:"Twitch チャット",ytChat:"YouTube チャット",
     quote1:"曲名をタップすると<b>「點歌 曲名」</b>がコピーされます",quote2:"Twitch か YouTube のチャットに貼ってね",
-    donate:"♡リクエストは無料！でも投げ銭も大歓迎です(*´꒳`*)b",listTitle:"歌リスト",search:"曲名・アーティストで検索",random:"ランダム",
+    donate:"♡リクエストは無料！でも投げ銭も大歓迎です(*´꒳`*)b",listTitle:"歌リスト",search:"曲名・アーティスト・備考で検索",random:"ランダム",
     sortSheet:"リスト順",sortNew:"新着順",sortTitle:"曲名順",sortArtist:"アーティスト順",thSong:"曲",thLang:"言語",thReq:"リクエスト",
     req:"リクエスト",all:"すべて",allSongs:"すべての曲",empty:"見つからない時はチャットで聞いてね ♡",
     pickTitle:"迷ったら？",pickIdle:"うさぎが1曲選んであげる",pickIdleSub:"選ばれた曲は自動でコピーされます",pickBtn:"1曲引く",pickAgain:"もう1回",copyAgain:"もう一度コピー",
@@ -427,7 +427,7 @@ document.addEventListener("click",e=>{
 });
 function visible(){
   const n=q.toLowerCase();
-  let r=SONGS.filter(s=>(lang==="全部"||s.lang===lang)&&(!n||s.title.toLowerCase().includes(n)||s.artist.toLowerCase().includes(n)));
+  let r=SONGS.filter(s=>(lang==="全部"||s.lang===lang)&&(!n||[s.title,s.artist,s.note].some(v=>(v||"").toLowerCase().includes(n))));
   if(sort==="new")r=[...r].reverse();
   if(sort==="title")r=[...r].sort((a,b)=>coll.compare(a.title,b.title));
   if(sort==="artist")r=[...r].sort((a,b)=>coll.compare(a.artist||"~",b.artist||"~")||coll.compare(a.title,b.title));
