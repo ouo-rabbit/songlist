@@ -513,7 +513,7 @@ async function loadSheet(){
   if(!CONFIG.sheetId){syncState="builtin";showSync();return}
   const ctrl=new AbortController();const timer=setTimeout(()=>ctrl.abort(),12000);
   try{
-    const url=`https://docs.google.com/spreadsheets/d/${CONFIG.sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(CONFIG.sheetName)}&_=${Date.now()}`;
+    const url=`https://docs.google.com/spreadsheets/d/${CONFIG.sheetId}/gviz/tq?tqx=out:csv&headers=1&sheet=${encodeURIComponent(CONFIG.sheetName)}&_=${Date.now()}`;
     const res=await fetch(url,{cache:"no-store",signal:ctrl.signal});if(!res.ok)throw new Error(res.status);
     const rows=parseCSV(await res.text()).map(r=>r.map(c=>c.trim()));
     if(!rows.length)throw new Error("empty");
