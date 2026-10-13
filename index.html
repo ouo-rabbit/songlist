@@ -215,6 +215,31 @@ footer span{display:inline-block;padding:6px 18px;border-radius:999px;font-famil
   .tag.mini{display:inline-block;font-size:10.5px;padding:1px 10px 1px 7px;margin-right:6px;vertical-align:1px}
   .req{padding:5px}.req .t{display:none}
 }
+/* ---------- 網頁點歌 ---------- */
+.today{display:inline-block;margin-left:8px;font-family:var(--font-sans);font-size:11px;font-weight:700;color:#fff;background:linear-gradient(100deg,#9b8ce0,#8eb4f0);padding:0 9px;border-radius:999px;vertical-align:2px;white-space:nowrap}
+li.req-today .req{background:var(--ribbon-mist);color:var(--ribbon-deep)}
+.rq{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(74,53,80,.32);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:rqIn .18s ease}
+.rq-box{position:relative;width:min(420px,100%);border-radius:28px;padding:24px 22px 18px;background:rgba(255,250,253,.94);border:1px solid var(--edge);box-shadow:0 30px 60px -24px rgba(120,60,110,.55);text-align:center;animation:rqPop .22s cubic-bezier(.3,1.5,.5,1)}
+.rq-box .egg{width:54px;height:54px;margin:-52px auto 4px;display:block;filter:drop-shadow(0 6px 10px rgba(196,81,127,.35))}
+.rq-box h2{margin:0 0 10px;font-family:var(--font-serif);font-size:19px;font-weight:700;color:var(--rose-deep)}
+.rq-song{padding:12px 14px;border-radius:18px;background:var(--rose-mist);margin-bottom:12px}
+.rq-song .t{font-family:var(--font-serif);font-size:18px;font-weight:600;line-height:1.35;overflow-wrap:anywhere}
+.rq-song .a{font-size:13px;color:var(--muted);margin-top:2px}
+.rq-note{font-size:13px;color:var(--soft);line-height:1.7;margin:0 0 10px}
+.rq-warn{font-size:13px;font-weight:700;color:var(--ribbon-deep);background:var(--ribbon-mist);border-radius:12px;padding:7px 10px;margin:0 0 10px}
+.rq-why{font-size:13.5px;font-weight:700;color:#b3365f;background:#ffe3ec;border:1px solid #f7b8cc;border-radius:12px;padding:8px 12px;margin:0 0 10px;line-height:1.6}
+.rq-banner{margin:0 0 12px;padding:9px 14px;border-radius:14px;font-size:13.5px;font-weight:700;color:#8a3a5c;background:rgba(255,227,236,.9);border:1px solid #f7b8cc;text-align:center}
+.rq-name{display:flex;flex-direction:column;gap:4px;text-align:left;font-size:12.5px;color:var(--soft);margin-bottom:14px}
+.rq-name input{font:inherit;font-size:15px;color:var(--ink);padding:9px 14px;border-radius:999px;border:1px solid var(--hair);background:#fff;outline:none}
+.rq-name input:focus{border-color:var(--rose)}
+.rq-btns{display:flex;gap:10px}
+.rq-btns .btn{flex:1;justify-content:center;height:44px;font-size:15px}
+.rq-btns .btn[disabled]{opacity:.55;cursor:default}
+.btn.plain{color:var(--soft);background:rgba(255,255,255,.9);box-shadow:inset 0 0 0 1px var(--hair)}
+.rq-copy{margin-top:12px;border:0;background:none;cursor:pointer;font-size:12.5px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.rq-x{position:absolute;top:10px;right:12px;width:32px;height:32px;border:0;border-radius:50%;background:transparent;cursor:pointer;font-size:18px;color:var(--muted)}
+@keyframes rqIn{from{opacity:0}}
+@keyframes rqPop{from{transform:scale(.92);opacity:0}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.petals{display:none}}
 </style>
 </head>
@@ -252,10 +277,11 @@ footer span{display:inline-block;padding:6px 18px;border-radius:999px;font-famil
         <h2 id="listTitle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l11-2v13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" fill="currentColor"/><circle cx="17" cy="16" r="3" fill="currentColor"/></svg><span data-i18n="listTitle">歌單</span></h2>
         <span class="sync" id="sync">歌單載入中</span>
       </div>
+      <p class="rq-banner" id="rqBanner" hidden></p>
       <div class="tools">
         <div class="search">
           <label class="field"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M13 13l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-            <input id="q" type="search" placeholder="搜尋歌名、歌手或備註" autocomplete="off" aria-label="搜尋歌名、歌手或備註" data-i18n-ph="search"></label>
+            <input id="q" type="search" placeholder="搜尋歌名或歌手" autocomplete="off" aria-label="搜尋歌名或歌手" data-i18n-ph="search"></label>
           <button class="btn" type="button" data-random><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0C11 7 13 9 20 10C13 11 11 13 10 20C9 13 7 11 0 10C7 9 9 7 10 0Z" fill="currentColor"/></svg><span data-i18n="random">抽一首</span></button>
         </div>
         <div class="sorts" id="sorts" role="group" aria-label="排序">
@@ -296,6 +322,22 @@ footer span{display:inline-block;padding:6px 18px;border-radius:999px;font-famil
   <footer><span class="glass">ouo_rabbit</span></footer>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="rq" id="rq" hidden>
+  <div class="rq-box" role="dialog" aria-modal="true" aria-labelledby="rqTitle">
+    <button class="rq-x" type="button" data-rq-close aria-label="×">✕</button>
+    <img class="egg" src="images/egg.webp" width="54" height="54" alt="">
+    <h2 id="rqTitle"></h2>
+    <div class="rq-song"><div class="t" id="rqSong"></div><div class="a" id="rqArtist"></div></div>
+    <p class="rq-warn" id="rqDone" hidden></p>
+    <p class="rq-why" id="rqWhy" role="alert" hidden></p>
+    <p class="rq-note" id="rqNote"></p>
+    <div class="rq-btns">
+      <button class="btn plain" type="button" data-rq-close id="rqCancel"></button>
+      <button class="btn" type="button" id="rqOk"></button>
+    </div>
+    <button class="rq-copy" type="button" id="rqCopy"></button>
+  </div>
+</div>
 <button class="totop glass" id="totop" type="button" aria-label="回到頂端" hidden>↑</button>
 
 <script>
@@ -310,6 +352,9 @@ const CONFIG = {
   donate: "https://nekolive.net/ouo_rabbit",
   // 觀眾複製到的點歌指令開頭（所有語言版本都一樣）
   copyPrefix: "點歌 ",
+  // 網頁點歌：貼上「點歌後台」（Google Apps Script）部署後的網址（…/exec）。
+  // 留空 "" = 跟以前一樣，點一下只會複製「點歌 歌名」
+  requestUrl: "",
   // 歌單底下的備註，三種語言各一句；不想顯示就留空 ""
   notice: {
     zh: "真珠美人魚系列：除了太冷門的應該都會唱。",
@@ -327,7 +372,7 @@ const T={
   zh:{docTitle:"兔子島點歌本",sideTitle:"歌單",motto:"沒在上面的歌，也可以問問看 ♪",catTitle:"歌單分類",chatTitle:"來聊天室點歌",
     twChat:"Twitch 聊天室",ytChat:"YouTube 聊天室",
     quote1:"點一下歌名，就會複製<b>「點歌 歌名」</b>",quote2:"貼到 Twitch 或 YouTube 聊天室就好",
-    donate:"♡點歌免費，但還是歡迎斗內唷(*´꒳`*)b",listTitle:"歌單",search:"搜尋歌名、歌手或備註",random:"抽一首",
+    donate:"♡點歌免費，但還是歡迎斗內唷(*´꒳`*)b",listTitle:"歌單",search:"搜尋歌名或歌手",random:"抽一首",
     sortSheet:"歌單順序",sortNew:"最新加入",sortTitle:"依歌名",sortArtist:"依歌手",thSong:"歌曲",thLang:"語言",thReq:"點歌",
     req:"點歌",all:"全部",allSongs:"全部歌曲",empty:"找不到這首，可以直接在聊天室問問看 ♡",
     pickTitle:"不知道點什麼？",pickIdle:"讓兔子幫你抽一首",pickIdleSub:"抽到的歌會自動複製",pickBtn:"抽一首",pickAgain:"再抽一首",copyAgain:"再複製一次",
@@ -338,7 +383,7 @@ const T={
   en:{docTitle:"ouo_rabbit Song List",sideTitle:"Songs",motto:"Don't see a song? Feel free to ask ♪",catTitle:"Categories",chatTitle:"Request in chat",
     twChat:"Twitch chat",ytChat:"YouTube chat",
     quote1:"Tap a song to copy <b>「點歌 title」</b>",quote2:"Paste it into Twitch or YouTube chat",
-    donate:"♡ Requests are free, but tips are always welcome (*´꒳`*)b",listTitle:"Song List",search:"Search songs, artists or notes",random:"Random",
+    donate:"♡ Requests are free, but tips are always welcome (*´꒳`*)b",listTitle:"Song List",search:"Search songs or artists",random:"Random",
     sortSheet:"Default",sortNew:"Newest",sortTitle:"Title",sortArtist:"Artist",thSong:"Song",thLang:"Language",thReq:"Request",
     req:"Request",all:"All",allSongs:"All songs",empty:"Can't find it? Just ask in chat ♡",
     pickTitle:"Can't decide?",pickIdle:"Let the bunny pick one for you",pickIdleSub:"The pick is copied automatically",pickBtn:"Pick a song",pickAgain:"Pick again",copyAgain:"Copy again",
@@ -349,7 +394,7 @@ const T={
   ja:{docTitle:"ouo_rabbit 歌リスト",sideTitle:"歌リスト",motto:"リストにない曲も気軽に聞いてね ♪",catTitle:"カテゴリー",chatTitle:"チャットでリクエスト",
     twChat:"Twitch チャット",ytChat:"YouTube チャット",
     quote1:"曲名をタップすると<b>「點歌 曲名」</b>がコピーされます",quote2:"Twitch か YouTube のチャットに貼ってね",
-    donate:"♡リクエストは無料！でも投げ銭も大歓迎です(*´꒳`*)b",listTitle:"歌リスト",search:"曲名・アーティスト・備考で検索",random:"ランダム",
+    donate:"♡リクエストは無料！でも投げ銭も大歓迎です(*´꒳`*)b",listTitle:"歌リスト",search:"曲名・アーティストで検索",random:"ランダム",
     sortSheet:"リスト順",sortNew:"新着順",sortTitle:"曲名順",sortArtist:"アーティスト順",thSong:"曲",thLang:"言語",thReq:"リクエスト",
     req:"リクエスト",all:"すべて",allSongs:"すべての曲",empty:"見つからない時はチャットで聞いてね ♡",
     pickTitle:"迷ったら？",pickIdle:"うさぎが1曲選んであげる",pickIdleSub:"選ばれた曲は自動でコピーされます",pickBtn:"1曲引く",pickAgain:"もう1回",copyAgain:"もう一度コピー",
@@ -358,6 +403,39 @@ const T={
     copied:x=>`「${x}」をコピーしました ♡`,manual:x=>`手動でコピーしてね：${x}`,noPick:"このカテゴリーには曲がありません",copyLabel:x=>`${x}をコピー`,toTop:"トップへ戻る",
     marquee:"タップでコピー",langs:{"中文":"中国語","日文":"日本語","英文":"英語","台語":"台湾語"}}
 };
+
+/* 網頁點歌用的文字（有設定 requestUrl 時，xxxReq 會取代 xxx） */
+Object.assign(T.zh,{
+  quote1Req:"點一下歌名，按<b>「確定點歌」</b>就點好了",quote2Req:"也可以複製「點歌 歌名」貼到聊天室",
+  step2Req:"點一下歌名，按<code>「確定點歌」</code>",step3Req:"會直接加進兔子的待唱清單 ♡",
+  marqueeReq:"點一下就能點歌",pickIdleSubReq:"抽到之後可以直接點",copyAgainReq:"點這首",copyLabelReq:x=>`點歌：${x}`,
+  rqTitle:"要點這首歌嗎？",rqNote:"按確定就會加進兔子的待唱清單 ♪<br>不過最後唱不唱、什麼時候唱，還是由兔子決定喔～",
+  rqOk:"確定點歌",rqCancel:"取消",rqSending:"點歌中…",
+  rqCopy:"改成複製點歌指令，貼到聊天室",rqDone:"這首今天已經有人點過囉，已經在清單上了 ♡",
+  todayBadge:"今天已點過",reqOk:x=>`點好了！「${x}」已加進待唱清單 ♡`,reqDup:"這首今天已經有人點過，已經在清單上囉 ♡",
+  closed:"目前不開放網頁點歌",errBusy:"現在點歌的人太多了，晚一點再試試看",
+  errNotfound:"這首不在歌單上，可以到聊天室問問看",errNet:"點歌失敗了…可以改用複製貼到聊天室"});
+Object.assign(T.en,{
+  quote1Req:"Tap a song, then press <b>Request</b>",quote2Req:"Or copy 「點歌 title」 into chat",
+  step2Req:"Tap it, then press <code>Request</code>",step3Req:"It goes straight onto the request list ♡",
+  marqueeReq:"Tap to request",pickIdleSubReq:"Then request it with one tap",copyAgainReq:"Request it",copyLabelReq:x=>`Request: ${x}`,
+  rqTitle:"Request this song?",rqNote:"It'll be added to the request list ♪<br>Whether (and when) it gets sung is still up to the streamer～",
+  rqOk:"Request",rqCancel:"Cancel",rqSending:"Sending…",
+  rqCopy:"Copy the chat command instead",rqDone:"Someone already requested this today — it's on the list ♡",
+  todayBadge:"Requested today",reqOk:x=>`Requested "${x}" ♡`,reqDup:"Already requested today — it's on the list ♡",
+  closed:"Song requests are not open right now",errBusy:"Lots of requests right now — please try again a bit later",
+  errNotfound:"That song isn't on the list — feel free to ask in chat",errNet:"Couldn't send it… you can copy it into chat instead"});
+Object.assign(T.ja,{
+  quote1Req:"曲名をタップして<b>「リクエスト」</b>を押すだけ",quote2Req:"「點歌 曲名」をコピーしてチャットに貼ってもOK",
+  step2Req:"曲名をタップして<code>「リクエスト」</code>",step3Req:"そのままリクエストリストに入ります ♡",
+  marqueeReq:"タップでリクエスト",pickIdleSubReq:"引いた曲をそのままリクエスト",copyAgainReq:"この曲をリクエスト",copyLabelReq:x=>`リクエスト：${x}`,
+  rqTitle:"この曲をリクエストしますか？",rqNote:"うさぎの歌リストに追加されます ♪<br>歌うかどうか・いつ歌うかは配信者が決めますね～",
+  rqOk:"リクエスト",rqCancel:"キャンセル",rqSending:"送信中…",
+  rqCopy:"コマンドをコピーしてチャットに貼る",rqDone:"今日はもうリクエストされています、リストに入ってます ♡",
+  todayBadge:"今日リクエスト済み",reqOk:x=>`「${x}」をリクエストしました ♡`,reqDup:"今日はもうリクエスト済み、リストに入ってます ♡",
+  closed:"現在ウェブリクエストは受け付けていません",errBusy:"今リクエストが混み合っています、少し後でもう一度どうぞ",
+  errNotfound:"この曲はリストにありません。チャットで聞いてみてね",errNet:"送信できませんでした…コピーしてチャットに貼ってね"});
+const REQ=!!CONFIG.requestUrl;
 
 const BG={day:"images/bg-day.webp",dusk:"images/bg-dusk.webp",night:"images/bg-night.webp"};
 const EGG="images/egg.webp";
@@ -380,7 +458,7 @@ document.querySelectorAll("[data-link]").forEach(a=>a.href=CONFIG[a.dataset.link
 let ui=T[CONFIG.defaultLanguage]?CONFIG.defaultLanguage:"zh";
 try{const s=localStorage.getItem("songbook-ui");if(T[s])ui=s}catch(e){}
 {const h=(location.hash||"").slice(1).toLowerCase();if(T[h])ui=h}
-const tr=k=>(T[ui][k]!==undefined?T[ui][k]:T.zh[k]);
+const tr=k=>{if(REQ&&T.zh[k+"Req"]!==undefined)k+="Req";return T[ui][k]!==undefined?T[ui][k]:T.zh[k]};
 const langLabel=l=>T[ui].langs[l]||l;
 let jaFontLoaded=false;
 function applyUI(){
@@ -397,6 +475,7 @@ function applyUI(){
   const STAR='<svg viewBox="0 0 20 20"><path d="M10 0C11 7 13 9 20 10C13 11 11 13 10 20C9 13 7 11 0 10C7 9 9 7 10 0Z" fill="#fff"/></svg>';
   $("track").innerHTML=`<span>SONG REQUEST ${STAR} TWITCH &amp; YOUTUBE ${STAR} <b>${tr("marquee")}</b> ${STAR} OUO_RABBIT ${STAR}</span>`.repeat(4);
   showSync();showPick();buildControls();render();
+  if(REQ)showBanner();
 }
 document.addEventListener("click",e=>{
   const b=e.target.closest("[data-ui]");if(!b)return;
@@ -427,7 +506,7 @@ document.addEventListener("click",e=>{
 });
 function visible(){
   const n=q.toLowerCase();
-  let r=SONGS.filter(s=>(lang==="全部"||s.lang===lang)&&(!n||[s.title,s.artist,s.note].some(v=>(v||"").toLowerCase().includes(n))));
+  let r=SONGS.filter(s=>(lang==="全部"||s.lang===lang)&&(!n||s.title.toLowerCase().includes(n)||s.artist.toLowerCase().includes(n)));
   if(sort==="new")r=[...r].reverse();
   if(sort==="title")r=[...r].sort((a,b)=>coll.compare(a.title,b.title));
   if(sort==="artist")r=[...r].sort((a,b)=>coll.compare(a.artist||"~",b.artist||"~")||coll.compare(a.title,b.title));
@@ -437,9 +516,9 @@ function render(){
   document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===lang));
   document.querySelectorAll("[data-sort]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.sort===sort));
   const r=visible();
-  $("list").innerHTML=r.length?r.map(s=>{const L=esc(langLabel(s.lang));return `<li data-no="${s.no}"><button class="row" type="button" data-no="${s.no}" aria-label="${esc(tr("copyLabel")(CONFIG.copyPrefix+s.title))}">
+  $("list").innerHTML=r.length?r.map(s=>{const L=esc(langLabel(s.lang));const td=requestedToday(s);return `<li data-no="${s.no}"${td?' class="req-today"':""}><button class="row" type="button" data-no="${s.no}" aria-label="${esc(tr("copyLabel")(REQ?s.title:CONFIG.copyPrefix+s.title))}">
       <span class="no">${s.no}</span>
-      <span class="song"><span class="title">${esc(s.title)}${s.note?`<span class="note">${esc(s.note)}</span>`:""}</span><span class="artist"><span class="tag mini" style="--c:${colorOf(s.lang)}">${L}</span>${esc(s.artist||"—")}</span></span>
+      <span class="song"><span class="title">${esc(s.title)}${s.note?`<span class="note">${esc(s.note)}</span>`:""}${td?`<span class="today">${esc(tr("todayBadge"))}</span>`:""}</span><span class="artist"><span class="tag mini" style="--c:${colorOf(s.lang)}">${L}</span>${esc(s.artist||"—")}</span></span>
       <span class="tag col" style="--c:${colorOf(s.lang)}">${L}</span>
       <span class="req"><img src="${EGG}" alt=""><span class="t">${esc(tr("req"))}</span></span>
     </button></li>`}).join(""):`<li class="empty">${esc(tr("empty"))}</li>`;
@@ -453,7 +532,7 @@ async function copy(s){
   catch(e){toast(tr("manual")(text),3500)}
 }
 const byNo=n=>SONGS.find(s=>s.no===+n);
-$("list").addEventListener("click",e=>{const b=e.target.closest(".row");if(b)copy(byNo(b.dataset.no))});
+$("list").addEventListener("click",e=>{const b=e.target.closest(".row");if(!b)return;const s=byNo(b.dataset.no);REQ?openReq(s):copy(s)});
 $("q").addEventListener("input",e=>{q=e.target.value.trim();render()});
 
 function markHit(s,scroll){
@@ -479,9 +558,9 @@ function pickOne(){
   picked=s;showPick();
   const pk=$("pick");pk.classList.remove("spin");void pk.offsetWidth;pk.classList.add("spin");
   const asideVisible=matchMedia("(min-width:1001px)").matches;
-  markHit(s,!asideVisible);copy(s);
+  markHit(s,!asideVisible);if(!REQ)copy(s);
 }
-$("pickCopy").addEventListener("click",()=>{if(picked)copy(picked)});
+$("pickCopy").addEventListener("click",()=>{if(picked)REQ?openReq(picked):copy(picked)});
 const topBtn=$("totop");
 addEventListener("scroll",()=>{topBtn.hidden=scrollY<700},{passive:true});
 topBtn.onclick=()=>scrollTo({top:0,behavior:"smooth"});
@@ -513,7 +592,7 @@ async function loadSheet(){
   if(!CONFIG.sheetId){syncState="builtin";showSync();return}
   const ctrl=new AbortController();const timer=setTimeout(()=>ctrl.abort(),12000);
   try{
-    const url=`https://docs.google.com/spreadsheets/d/${CONFIG.sheetId}/gviz/tq?tqx=out:csv&headers=1&sheet=${encodeURIComponent(CONFIG.sheetName)}&_=${Date.now()}`;
+    const url=`https://docs.google.com/spreadsheets/d/${CONFIG.sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(CONFIG.sheetName)}&_=${Date.now()}`;
     const res=await fetch(url,{cache:"no-store",signal:ctrl.signal});if(!res.ok)throw new Error(res.status);
     const rows=parseCSV(await res.text()).map(r=>r.map(c=>c.trim()));
     if(!rows.length)throw new Error("empty");
@@ -526,6 +605,89 @@ async function loadSheet(){
   }catch(e){syncState=syncState==="checking"?"cached":"fallback";showSync()}
   finally{clearTimeout(timer)}
 }
+/* ---------- 網頁點歌（requestUrl 有設定才會用到） ---------- */
+const normT=s=>String(s==null?"":s).toLowerCase().replace(/\.[a-z0-9]{2,4}$/,"").replace(/[\s\-_()\[\]（）【】·・,，.。!！?？'"「」《》\/\\]/g,"");
+let todaySet=new Set(),todayList=[],rqSong=null,rqBusy=false;
+/* 後台回報「現在開不開放網頁點歌」（UtaStage 開著、而且勾了網頁點歌才開放）；還不知道之前先當作開放 */
+let rqOpen=true;
+function requestedToday(s){
+  if(!todaySet.size)return false;
+  const k=normT(s.title);if(!k)return false;
+  if(todaySet.has(k))return true;
+  /* 聊天室點的歌名可能多打了字（例如「點歌 紅色高跟鞋 蔡健雅」）→ 包含整個歌名也算 */
+  return k.length>=2&&todayList.some(t=>t.length>k.length&&t.includes(k));
+}
+function setToday(titles){
+  todayList=(titles||[]).map(normT).filter(Boolean);todaySet=new Set(todayList);render();
+}
+async function api(method,params,body){
+  const ctrl=new AbortController();const timer=setTimeout(()=>ctrl.abort(),15000);
+  try{
+    const url=CONFIG.requestUrl+(params?(CONFIG.requestUrl.includes("?")?"&":"?")+new URLSearchParams(params):"");
+    const res=await fetch(url,method==="POST"?{method:"POST",body:JSON.stringify(body),headers:{"Content-Type":"text/plain;charset=utf-8"},signal:ctrl.signal}
+                                               :{cache:"no-store",signal:ctrl.signal});
+    return await res.json();
+  }finally{clearTimeout(timer)}
+}
+function setOpen(v){
+  if(v===undefined)return;
+  rqOpen=!!v;showBanner();if(rqSong)refreshReq();
+}
+function showBanner(){
+  const b=$("rqBanner");if(!b)return;
+  const off=REQ&&!rqOpen;
+  b.hidden=!off;if(off)b.textContent=tr("closed");
+}
+async function loadToday(){
+  if(!REQ)return;
+  try{const j=await api("GET",{action:"today",_:Date.now()});if(j&&j.ok){setOpen(j.open);setToday(j.titles)}}catch(e){}
+}
+function refreshReq(){
+  const s=rqSong;if(!s)return;
+  const done=requestedToday(s);
+  $("rqDone").hidden=!done;$("rqDone").textContent=tr("rqDone");
+  const why=done||rqOpen?"":tr("closed");
+  $("rqWhy").hidden=!why;$("rqWhy").textContent=why;
+  if(!rqBusy)$("rqOk").disabled=done||!rqOpen;
+}
+function openReq(s){
+  if(!s)return;rqSong=s;rqBusy=false;
+  $("rqTitle").textContent=tr("rqTitle");$("rqNote").innerHTML=tr("rqNote");
+  $("rqSong").textContent=s.title;$("rqArtist").textContent=s.artist||"";
+  $("rqCancel").textContent=tr("rqCancel");$("rqOk").textContent=tr("rqOk");
+  $("rqCopy").textContent=tr("rqCopy");
+  refreshReq();
+  $("rq").hidden=false;
+  setTimeout(()=>($("rqOk").disabled?$("rqCancel"):$("rqOk")).focus(),30);
+  loadToday().then(()=>{if(rqSong===s)refreshReq()});      // 現在開不開放、今天點過哪些：問最新的
+}
+function closeReq(){$("rq").hidden=true;rqSong=null}
+async function sendReq(){
+  const s=rqSong;if(!s||rqBusy)return;
+  rqBusy=true;$("rqOk").disabled=true;$("rqOk").textContent=tr("rqSending");
+  let j=null;
+  try{j=await api("POST",null,{action:"request",title:s.title,artist:s.artist})}catch(e){}
+  rqBusy=false;$("rqOk").textContent=tr("rqOk");
+  if(j&&j.ok){
+    setOpen(j.open);if(j.titles)setToday(j.titles);
+    closeReq();markHit(s,false);toast(j.dup?tr("reqDup"):tr("reqOk")(s.title),3200);return;
+  }
+  /* 失敗：原因寫在小視窗裡（不只是一閃而過的提示），觀眾才不會以為壞掉 */
+  const err=j&&j.err;
+  if(err==="closed"){setOpen(false);toast(tr("closed"),3800);return}
+  const msg=err==="busy"?tr("errBusy"):err==="notfound"?tr("errNotfound"):tr("errNet");
+  refreshReq();
+  $("rqWhy").hidden=false;$("rqWhy").textContent=msg;
+  if(err==="busy"||!err)$("rqOk").disabled=false;
+  toast(msg,3800);
+}
+$("rq").addEventListener("click",e=>{if(e.target===$("rq")||e.target.closest("[data-rq-close]"))closeReq()});
+$("rqOk").addEventListener("click",sendReq);
+$("rqCopy").addEventListener("click",()=>{const s=rqSong;closeReq();if(s)copy(s)});
+addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("rq").hidden)closeReq()});
+if(REQ){loadToday();setInterval(()=>{if(!document.hidden)loadToday()},60000);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadToday()})}
+
 {const c=readCache();if(c){SONGS=c.map((s,i)=>({...s,no:i+1}));syncState="checking"}}
 applyUI();loadSheet();
 </script>
