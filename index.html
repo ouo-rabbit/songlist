@@ -215,6 +215,31 @@ footer span{display:inline-block;padding:6px 18px;border-radius:999px;font-famil
   .tag.mini{display:inline-block;font-size:10.5px;padding:1px 10px 1px 7px;margin-right:6px;vertical-align:1px}
   .req{padding:5px}.req .t{display:none}
 }
+/* ---------- 網頁點歌 ---------- */
+.today{display:inline-block;margin-left:8px;font-family:var(--font-sans);font-size:11px;font-weight:700;color:#fff;background:linear-gradient(100deg,#9b8ce0,#8eb4f0);padding:0 9px;border-radius:999px;vertical-align:2px;white-space:nowrap}
+li.req-today .req{background:var(--ribbon-mist);color:var(--ribbon-deep)}
+.rq{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(74,53,80,.32);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:rqIn .18s ease}
+.rq-box{position:relative;width:min(420px,100%);border-radius:28px;padding:24px 22px 18px;background:rgba(255,250,253,.94);border:1px solid var(--edge);box-shadow:0 30px 60px -24px rgba(120,60,110,.55);text-align:center;animation:rqPop .22s cubic-bezier(.3,1.5,.5,1)}
+.rq-box .egg{width:54px;height:54px;margin:-52px auto 4px;display:block;filter:drop-shadow(0 6px 10px rgba(196,81,127,.35))}
+.rq-box h2{margin:0 0 10px;font-family:var(--font-serif);font-size:19px;font-weight:700;color:var(--rose-deep)}
+.rq-song{padding:12px 14px;border-radius:18px;background:var(--rose-mist);margin-bottom:12px}
+.rq-song .t{font-family:var(--font-serif);font-size:18px;font-weight:600;line-height:1.35;overflow-wrap:anywhere}
+.rq-song .a{font-size:13px;color:var(--muted);margin-top:2px}
+.rq-note{font-size:13px;color:var(--soft);line-height:1.7;margin:0 0 10px}
+.rq-warn{font-size:13px;font-weight:700;color:var(--ribbon-deep);background:var(--ribbon-mist);border-radius:12px;padding:7px 10px;margin:0 0 10px}
+.rq-why{font-size:13.5px;font-weight:700;color:#b3365f;background:#ffe3ec;border:1px solid #f7b8cc;border-radius:12px;padding:8px 12px;margin:0 0 10px;line-height:1.6}
+.rq-banner{margin:0 0 12px;padding:9px 14px;border-radius:14px;font-size:13.5px;font-weight:700;color:#8a3a5c;background:rgba(255,227,236,.9);border:1px solid #f7b8cc;text-align:center}
+.rq-name{display:flex;flex-direction:column;gap:4px;text-align:left;font-size:12.5px;color:var(--soft);margin-bottom:14px}
+.rq-name input{font:inherit;font-size:15px;color:var(--ink);padding:9px 14px;border-radius:999px;border:1px solid var(--hair);background:#fff;outline:none}
+.rq-name input:focus{border-color:var(--rose)}
+.rq-btns{display:flex;gap:10px}
+.rq-btns .btn{flex:1;justify-content:center;height:44px;font-size:15px}
+.rq-btns .btn[disabled]{opacity:.55;cursor:default}
+.btn.plain{color:var(--soft);background:rgba(255,255,255,.9);box-shadow:inset 0 0 0 1px var(--hair)}
+.rq-copy{margin-top:12px;border:0;background:none;cursor:pointer;font-size:12.5px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.rq-x{position:absolute;top:10px;right:12px;width:32px;height:32px;border:0;border-radius:50%;background:transparent;cursor:pointer;font-size:18px;color:var(--muted)}
+@keyframes rqIn{from{opacity:0}}
+@keyframes rqPop{from{transform:scale(.92);opacity:0}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.petals{display:none}}
 </style>
 </head>
@@ -252,6 +277,7 @@ footer span{display:inline-block;padding:6px 18px;border-radius:999px;font-famil
         <h2 id="listTitle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l11-2v13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" fill="currentColor"/><circle cx="17" cy="16" r="3" fill="currentColor"/></svg><span data-i18n="listTitle">歌單</span></h2>
         <span class="sync" id="sync">歌單載入中</span>
       </div>
+      <p class="rq-banner" id="rqBanner" hidden></p>
       <div class="tools">
         <div class="search">
           <label class="field"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M13 13l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -296,6 +322,22 @@ footer span{display:inline-block;padding:6px 18px;border-radius:999px;font-famil
   <footer><span class="glass">ouo_rabbit</span></footer>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="rq" id="rq" hidden>
+  <div class="rq-box" role="dialog" aria-modal="true" aria-labelledby="rqTitle">
+    <button class="rq-x" type="button" data-rq-close aria-label="×">✕</button>
+    <img class="egg" src="images/egg.webp" width="54" height="54" alt="">
+    <h2 id="rqTitle"></h2>
+    <div class="rq-song"><div class="t" id="rqSong"></div><div class="a" id="rqArtist"></div></div>
+    <p class="rq-warn" id="rqDone" hidden></p>
+    <p class="rq-why" id="rqWhy" role="alert" hidden></p>
+    <p class="rq-note" id="rqNote"></p>
+    <div class="rq-btns">
+      <button class="btn plain" type="button" data-rq-close id="rqCancel"></button>
+      <button class="btn" type="button" id="rqOk"></button>
+    </div>
+    <button class="rq-copy" type="button" id="rqCopy"></button>
+  </div>
+</div>
 <button class="totop glass" id="totop" type="button" aria-label="回到頂端" hidden>↑</button>
 
 <script>
@@ -310,6 +352,9 @@ const CONFIG = {
   donate: "https://nekolive.net/ouo_rabbit",
   // 觀眾複製到的點歌指令開頭（所有語言版本都一樣）
   copyPrefix: "點歌 ",
+  // 網頁點歌：貼上「點歌後台」（Google Apps Script）部署後的網址（…/exec）。
+  // 留空 "" = 跟以前一樣，點一下只會複製「點歌 歌名」
+  requestUrl: "https://script.google.com/macros/s/AKfycbwSrMVfySpFx8wxUJdPIn3ATW-rPset1eEgjRDZYEA1nvwjILUgph1bXjMVJIZJV0xt/exec",
   // 歌單底下的備註，三種語言各一句；不想顯示就留空 ""
   notice: {
     zh: "真珠美人魚系列：除了太冷門的應該都會唱。",
@@ -359,6 +404,39 @@ const T={
     marquee:"タップでコピー",langs:{"中文":"中国語","日文":"日本語","英文":"英語","台語":"台湾語"}}
 };
 
+/* 網頁點歌用的文字（有設定 requestUrl 時，xxxReq 會取代 xxx） */
+Object.assign(T.zh,{
+  quote1Req:"點一下歌名，按<b>「確定點歌」</b>就點好了",quote2Req:"也可以複製「點歌 歌名」貼到聊天室",
+  step2Req:"點一下歌名，按<code>「確定點歌」</code>",step3Req:"會直接加進兔子的待唱清單 ♡",
+  marqueeReq:"點一下就能點歌",pickIdleSubReq:"抽到之後可以直接點",copyAgainReq:"點這首",copyLabelReq:x=>`點歌：${x}`,
+  rqTitle:"要點這首歌嗎？",rqNote:"按確定就會加進兔子的待唱清單 ♪<br>不過最後唱不唱、什麼時候唱，還是由兔子決定喔～",
+  rqOk:"確定點歌",rqCancel:"取消",rqSending:"點歌中…",
+  rqCopy:"改成複製點歌指令，貼到聊天室",rqDone:"這首今天已經有人點過囉，已經在清單上了 ♡",
+  todayBadge:"今天已點過",reqOk:x=>`點好了！「${x}」已加進待唱清單 ♡`,reqDup:"這首今天已經有人點過，已經在清單上囉 ♡",
+  closed:"目前不開放網頁點歌",errBusy:"現在點歌的人太多了，晚一點再試試看",
+  errNotfound:"這首不在歌單上，可以到聊天室問問看",errNet:"點歌失敗了…可以改用複製貼到聊天室"});
+Object.assign(T.en,{
+  quote1Req:"Tap a song, then press <b>Request</b>",quote2Req:"Or copy 「點歌 title」 into chat",
+  step2Req:"Tap it, then press <code>Request</code>",step3Req:"It goes straight onto the request list ♡",
+  marqueeReq:"Tap to request",pickIdleSubReq:"Then request it with one tap",copyAgainReq:"Request it",copyLabelReq:x=>`Request: ${x}`,
+  rqTitle:"Request this song?",rqNote:"It'll be added to the request list ♪<br>Whether (and when) it gets sung is still up to the streamer～",
+  rqOk:"Request",rqCancel:"Cancel",rqSending:"Sending…",
+  rqCopy:"Copy the chat command instead",rqDone:"Someone already requested this today — it's on the list ♡",
+  todayBadge:"Requested today",reqOk:x=>`Requested "${x}" ♡`,reqDup:"Already requested today — it's on the list ♡",
+  closed:"Song requests are not open right now",errBusy:"Lots of requests right now — please try again a bit later",
+  errNotfound:"That song isn't on the list — feel free to ask in chat",errNet:"Couldn't send it… you can copy it into chat instead"});
+Object.assign(T.ja,{
+  quote1Req:"曲名をタップして<b>「リクエスト」</b>を押すだけ",quote2Req:"「點歌 曲名」をコピーしてチャットに貼ってもOK",
+  step2Req:"曲名をタップして<code>「リクエスト」</code>",step3Req:"そのままリクエストリストに入ります ♡",
+  marqueeReq:"タップでリクエスト",pickIdleSubReq:"引いた曲をそのままリクエスト",copyAgainReq:"この曲をリクエスト",copyLabelReq:x=>`リクエスト：${x}`,
+  rqTitle:"この曲をリクエストしますか？",rqNote:"うさぎの歌リストに追加されます ♪<br>歌うかどうか・いつ歌うかは配信者が決めますね～",
+  rqOk:"リクエスト",rqCancel:"キャンセル",rqSending:"送信中…",
+  rqCopy:"コマンドをコピーしてチャットに貼る",rqDone:"今日はもうリクエストされています、リストに入ってます ♡",
+  todayBadge:"今日リクエスト済み",reqOk:x=>`「${x}」をリクエストしました ♡`,reqDup:"今日はもうリクエスト済み、リストに入ってます ♡",
+  closed:"現在ウェブリクエストは受け付けていません",errBusy:"今リクエストが混み合っています、少し後でもう一度どうぞ",
+  errNotfound:"この曲はリストにありません。チャットで聞いてみてね",errNet:"送信できませんでした…コピーしてチャットに貼ってね"});
+const REQ=!!CONFIG.requestUrl;
+
 const BG={day:"images/bg-day.webp",dusk:"images/bg-dusk.webp",night:"images/bg-night.webp"};
 const EGG="images/egg.webp";
 const FALLBACK=[{"lang": "中文", "artist": "?te", "title": "Cazzo", "note": ""}, {"lang": "中文", "artist": "?te", "title": "Santé", "note": ""}, {"lang": "中文", "artist": "田馥甄", "title": "Love!", "note": ""}, {"lang": "中文", "artist": "李友廷", "title": "誰", "note": ""}, {"lang": "中文", "artist": "阿肆", "title": "熱愛105度的你", "note": ""}, {"lang": "中文", "artist": "胖樂團", "title": "魚", "note": ""}, {"lang": "中文", "artist": "韋禮安", "title": "狼", "note": ""}, {"lang": "中文", "artist": "唐貓", "title": "lonely", "note": ""}, {"lang": "中文", "artist": "高爾宣", "title": "Without you", "note": ""}, {"lang": "中文", "artist": "婁峻碩", "title": "COLORFUL", "note": ""}, {"lang": "中文", "artist": "甜約翰", "title": "Dear", "note": ""}, {"lang": "中文", "artist": "異鄉人", "title": "SWAG午覺", "note": ""}, {"lang": "中文", "artist": "荷爾蒙少年", "title": "4:00A.M.", "note": ""}, {"lang": "中文", "artist": "莫文蔚", "title": "愛", "note": ""}, {"lang": "中文", "artist": "陳綺貞", "title": "魚", "note": ""}, {"lang": "中文", "artist": "潮州土狗", "title": "50元的檳榔", "note": ""}, {"lang": "中文", "artist": "蔡健雅", "title": "Letting Go", "note": ""}, {"lang": "中文", "artist": "Blueburn", "title": "Diane", "note": ""}, {"lang": "中文", "artist": "Bu$Y & Ye!!ow, Paper Jim", "title": "戀曲2020", "note": ""}, {"lang": "中文", "artist": "Crispy脆樂團", "title": "100分", "note": ""}, {"lang": "中文", "artist": "FIR", "title": "Lydia", "note": ""}, {"lang": "中文", "artist": "Hello Nico", "title": "花", "note": ""}, {"lang": "中文", "artist": "ØZI", "title": "BLACK OUT", "note": ""}, {"lang": "中文", "artist": "sunkis", "title": "Trust me", "note": ""}, {"lang": "中文", "artist": "Tizzy Bac", "title": "You'll See", "note": ""}, {"lang": "中文", "artist": "于文文", "title": "體面", "note": ""}, {"lang": "中文", "artist": "五月天", "title": "擁抱", "note": ""}, {"lang": "中文", "artist": "好樂團", "title": "蒸發", "note": ""}, {"lang": "中文", "artist": "老王樂隊", "title": "安九", "note": ""}, {"lang": "中文", "artist": "李佳薇", "title": "大火", "note": ""}, {"lang": "中文", "artist": "李榮浩", "title": "李白", "note": ""}, {"lang": "中文", "artist": "辛曉琪", "title": "味道", "note": ""}, {"lang": "中文", "artist": "周杰倫", "title": "稻香", "note": ""}, {"lang": "中文", "artist": "房東的貓", "title": "獨一", "note": ""}, {"lang": "中文", "artist": "房東的貓", "title": "如常", "note": ""}, {"lang": "中文", "artist": "東城衛", "title": "夠愛", "note": ""}, {"lang": "中文", "artist": "林俊傑", "title": "她說", "note": ""}, {"lang": "中文", "artist": "林宥嘉", "title": "兜圈", "note": ""}, {"lang": "中文", "artist": "林宥嘉", "title": "浪費", "note": ""}, {"lang": "中文", "artist": "阿密特", "title": "掉了", "note": ""}, {"lang": "中文", "artist": "美秀集團", "title": "捲菸", "note": ""}, {"lang": "中文", "artist": "美秀集團", "title": "米兒", "note": ""}, {"lang": "中文", "artist": "美秀集團", "title": "戀人", "note": ""}, {"lang": "中文", "artist": "美秀集團", "title": "白鯨", "note": ""}, {"lang": "中文", "artist": "韋禮安", "title": "女孩", "note": ""}, {"lang": "中文", "artist": "孫燕姿", "title": "逆光", "note": ""}, {"lang": "中文", "artist": "張宇", "title": "趁早", "note": ""}, {"lang": "中文", "artist": "張惠妹", "title": "人質", "note": ""}, {"lang": "中文", "artist": "張震嶽", "title": "自由", "note": ""}, {"lang": "中文", "artist": "張懸", "title": "艷火", "note": ""}, {"lang": "中文", "artist": "張懸", "title": "喜歡", "note": ""}, {"lang": "中文", "artist": "梁靜茹", "title": "崇拜", "note": ""}, {"lang": "中文", "artist": "理想混蛋", "title": "行星", "note": ""}, {"lang": "中文", "artist": "莫文蔚", "title": "陰天", "note": ""}, {"lang": "中文", "artist": "李浩瑋", "title": "無垢", "note": ""}, {"lang": "中文", "artist": "陳芳語", "title": "愛你", "note": ""}, {"lang": "中文", "artist": "陳粒", "title": "小半", "note": ""}, {"lang": "中文", "artist": "陳綺貞", "title": "太陽", "note": ""}, {"lang": "中文", "artist": "渣泥", "title": "可是", "note": ""}, {"lang": "中文", "artist": "渣泥", "title": "半心", "note": ""}, {"lang": "中文", "artist": "楊丞琳", "title": "雨愛", "note": ""}, {"lang": "中文", "artist": "楊丞琳", "title": "曖昧", "note": ""}, {"lang": "中文", "artist": "蔡依林", "title": "舞孃", "note": ""}, {"lang": "中文", "artist": "鄧紫棋", "title": "泡沫", "note": ""}, {"lang": "中文", "artist": "薛之謙", "title": "演員", "note": ""}, {"lang": "中文", "artist": "藍又時", "title": "秘密", "note": ""}, {"lang": "中文", "artist": "蘇打綠", "title": "女爵", "note": ""}, {"lang": "中文", "artist": "deca jions", "title": "浴室", "note": ""}, {"lang": "中文", "artist": "deca jions", "title": "海浪", "note": ""}, {"lang": "中文", "artist": "POPO J", "title": "曖人", "note": ""}, {"lang": "中文", "artist": "Tizzy Bac", "title": "灰燼", "note": ""}, {"lang": "中文", "artist": "wannasleep", "title": "入夢", "note": ""}, {"lang": "中文", "artist": "回春丹", "title": "鮮花", "note": ""}, {"lang": "中文", "artist": "椅子樂團", "title": "樹屋", "note": ""}, {"lang": "中文", "artist": "?te", "title": "睡不著", "note": ""}, {"lang": "中文", "artist": "丁噹", "title": "我愛他", "note": ""}, {"lang": "中文", "artist": "五月天", "title": "聽不到", "note": ""}, {"lang": "中文", "artist": "四葉草", "title": "好想你", "note": ""}, {"lang": "中文", "artist": "田馥甄", "title": "小幸運", "note": ""}, {"lang": "中文", "artist": "冰球樂團", "title": "搖啊搖", "note": ""}, {"lang": "中文", "artist": "宋冬野", "title": "董小姐", "note": ""}, {"lang": "中文", "artist": "周杰倫", "title": "簡單愛", "note": ""}, {"lang": "中文", "artist": "周杰倫", "title": "龍捲風", "note": ""}, {"lang": "中文", "artist": "周杰倫", "title": "七里香", "note": ""}, {"lang": "中文", "artist": "青井", "title": "直到我", "note": ""}, {"lang": "中文", "artist": "南拳媽媽", "title": "下雨天", "note": ""}, {"lang": "中文", "artist": "美秀集團", "title": "擋一根", "note": ""}, {"lang": "中文", "artist": "美秀集團", "title": "小老婆", "note": ""}, {"lang": "中文", "artist": "韋禮安", "title": "還是會", "note": ""}, {"lang": "中文", "artist": "韋禮安", "title": "有沒有", "note": ""}, {"lang": "中文", "artist": "孫燕姿", "title": "天黑黑", "note": ""}, {"lang": "中文", "artist": "孫燕姿", "title": "第一天", "note": ""}, {"lang": "中文", "artist": "草東沒有派對", "title": "大風吹", "note": ""}, {"lang": "中文", "artist": "馬頔", "title": "南山南", "note": ""}, {"lang": "中文", "artist": "張若凡", "title": "走了嗎", "note": ""}, {"lang": "中文", "artist": "張韶涵", "title": "歐若拉", "note": ""}, {"lang": "中文", "artist": "張韶涵", "title": "夢裡花", "note": ""}, {"lang": "中文", "artist": "張懸", "title": "無狀態", "note": ""}, {"lang": "中文", "artist": "陳奕迅", "title": "孤勇者", "note": ""}, {"lang": "中文", "artist": "陳綺貞", "title": "吉他手", "note": ""}, {"lang": "中文", "artist": "陳綺貞", "title": "太聰明", "note": ""}, {"lang": "中文", "artist": "李浩瑋", "title": "真心話", "note": ""}, {"lang": "中文", "artist": "李浩瑋", "title": "窩囔廢", "note": ""}, {"lang": "中文", "artist": "蔡健雅", "title": "無底洞", "note": ""}, {"lang": "中文", "artist": "盧廣仲", "title": "我愛你", "note": ""}, {"lang": "中文", "artist": "盧廣仲", "title": "大人中", "note": ""}, {"lang": "中文", "artist": "薛之謙", "title": "醜八怪", "note": ""}, {"lang": "中文", "artist": "謊言留聲機", "title": "分手夜", "note": ""}, {"lang": "中文", "artist": "蘇打綠", "title": "小情歌", "note": ""}, {"lang": "中文", "artist": "蘇打綠", "title": "小宇宙", "note": ""}, {"lang": "中文", "artist": "The Crane", "title": "不介意", "note": ""}, {"lang": "中文", "artist": "J.Sheon", "title": "輸情歌", "note": ""}, {"lang": "中文", "artist": "POPO J", "title": "鯛先生", "note": ""}, {"lang": "中文", "artist": "Vast & Hazy", "title": "食人夢", "note": ""}, {"lang": "中文", "artist": "五月天", "title": "盛夏光年", "note": ""}, {"lang": "中文", "artist": "田馥甄", "title": "不醉不會", "note": ""}, {"lang": "中文", "artist": "朴樹", "title": "平凡之路", "note": ""}, {"lang": "中文", "artist": "老莫 ILL MO X ?te 壞特", "title": "女士優先", "note": ""}, {"lang": "中文", "artist": "告五人", "title": "愛人錯過", "note": ""}, {"lang": "中文", "artist": "告五人", "title": "愛在夏天", "note": ""}, {"lang": "中文", "artist": "宋冬野", "title": "斑馬，斑馬", "note": ""}, {"lang": "中文", "artist": "李榮浩", "title": "年少有為", "note": ""}, {"lang": "中文", "artist": "周湯豪", "title": "帥到分手", "note": ""}, {"lang": "中文", "artist": "弦子", "title": "沿海地帶", "note": ""}, {"lang": "中文", "artist": "房東的貓", "title": "雲煙成雨", "note": ""}, {"lang": "中文", "artist": "河仁傑", "title": "接不接受", "note": ""}, {"lang": "中文", "artist": "阿冗", "title": "與我無關", "note": ""}, {"lang": "中文", "artist": "阿密特", "title": "母系社會", "note": ""}, {"lang": "中文", "artist": "美秀集團", "title": "我要你愛", "note": ""}, {"lang": "中文", "artist": "韋禮安", "title": "如果可以", "note": ""}, {"lang": "中文", "artist": "孫燕姿", "title": "我懷念的", "note": ""}, {"lang": "中文", "artist": "孫燕姿", "title": "我不難過", "note": ""}, {"lang": "中文", "artist": "徐佳瑩", "title": "你敢不敢", "note": ""}, {"lang": "中文", "artist": "徐佳瑩", "title": "失落沙洲", "note": ""}, {"lang": "中文", "artist": "桃子、韓森、POPO J", "title": "旋轉木馬", "note": ""}, {"lang": "中文", "artist": "海豚刑警", "title": "安平之光", "note": ""}, {"lang": "中文", "artist": "庾澄慶", "title": "情非得已", "note": ""}, {"lang": "中文", "artist": "張震嶽", "title": "愛我別走", "note": ""}, {"lang": "中文", "artist": "甜約翰", "title": "失蹤人口", "note": ""}, {"lang": "中文", "artist": "甜約翰", "title": "降雨機率", "note": ""}, {"lang": "中文", "artist": "莫文蔚", "title": "他不愛我", "note": ""}, {"lang": "中文", "artist": "莫宰羊", "title": "未接來電", "note": ""}, {"lang": "中文", "artist": "蛋堡", "title": "關於小熊", "note": ""}, {"lang": "中文", "artist": "蔡依林", "title": "單身公害", "note": ""}, {"lang": "中文", "artist": "陶喆", "title": "黑色柳丁", "note": ""}, {"lang": "中文", "artist": "順子", "title": "寫一首歌", "note": ""}, {"lang": "中文", "artist": "黃立行x劉若英", "title": "分開旅行", "note": ""}, {"lang": "中文", "artist": "謝震廷", "title": "你的行李", "note": ""}, {"lang": "中文", "artist": "藍又時", "title": "孤單心事", "note": ""}, {"lang": "中文", "artist": "魏如萱", "title": "你啊你啊", "note": ""}, {"lang": "中文", "artist": "", "title": "摸ㄝ摸ㄝ", "note": ""}, {"lang": "中文", "artist": "勸世喵喵", "title": "喵電感應", "note": ""}, {"lang": "中文", "artist": "FIR", "title": "我們的愛", "note": ""}, {"lang": "中文", "artist": "Hush！", "title": "波希米亞", "note": ""}, {"lang": "中文", "artist": "Hush！", "title": "第三人稱", "note": ""}, {"lang": "中文", "artist": "Tizzy Bac", "title": "瘋狂的豬", "note": ""}, {"lang": "中文", "artist": "Vast & Hazy", "title": "與浪之間", "note": ""}, {"lang": "中文", "artist": "卜學亮", "title": "超跑情人夢", "note": ""}, {"lang": "中文", "artist": "曲婉婷", "title": "我的歌聲裡", "note": ""}, {"lang": "中文", "artist": "吳汶芳", "title": "孤獨的總和", "note": ""}, {"lang": "中文", "artist": "林俊傑", "title": "可惜沒如果", "note": ""}, {"lang": "中文", "artist": "林憶蓮", "title": "至少還有你", "note": ""}, {"lang": "中文", "artist": "洪佩瑜", "title": "踮起腳尖愛", "note": ""}, {"lang": "中文", "artist": "張懸", "title": "關於我愛你", "note": ""}, {"lang": "中文", "artist": "張懸", "title": "玫瑰色的你", "note": ""}, {"lang": "中文", "artist": "莫文蔚", "title": "慢慢喜歡你", "note": ""}, {"lang": "中文", "artist": "陳粒", "title": "易燃易爆炸", "note": ""}, {"lang": "中文", "artist": "陳綺貞", "title": "旅行的意義", "note": ""}, {"lang": "中文", "artist": "陳綺貞", "title": "還是會寂寞", "note": ""}, {"lang": "中文", "artist": "蔡健雅", "title": "紅色高跟鞋", "note": ""}, {"lang": "中文", "artist": "蔡健雅", "title": "被馴服的象", "note": ""}, {"lang": "中文", "artist": "蔡健雅", "title": "別找我麻煩", "note": ""}, {"lang": "中文", "artist": "盧廣仲", "title": "一百種生活", "note": ""}, {"lang": "中文", "artist": "藍又時", "title": "倫敦的愛情", "note": ""}, {"lang": "中文", "artist": "J.Sheon", "title": "別問很可怕", "note": ""}, {"lang": "中文", "artist": "Leo王&9m88", "title": "陪你過假日", "note": ""}, {"lang": "中文", "artist": "Limi", "title": "雨季型戀人", "note": ""}, {"lang": "中文", "artist": "Macdella", "title": "不想肚子餓", "note": ""}, {"lang": "中文", "artist": "信樂團", "title": "火燒的寂寞", "note": ""}, {"lang": "中文", "artist": "胡恂舞", "title": "路邊的野花", "note": ""}, {"lang": "中文", "artist": "五月天", "title": "我不願讓你一個人", "note": ""}, {"lang": "中文", "artist": "田馥甄", "title": "寂寞寂寞就好", "note": ""}, {"lang": "中文", "artist": "田馥甄", "title": "你就不要想起我", "note": ""}, {"lang": "中文", "artist": "田馥甄", "title": "魔鬼中的天使", "note": ""}, {"lang": "中文", "artist": "白安", "title": "是什麼讓我遇見這樣的你", "note": ""}, {"lang": "中文", "artist": "多多", "title": "走建國路回家但後座少ㄌ泥", "note": ""}, {"lang": "中文", "artist": "好樂團", "title": "我愛你卻不能拯救你", "note": ""}, {"lang": "中文", "artist": "好樂團", "title": "他們說我是沒有用的年輕人", "note": ""}, {"lang": "中文", "artist": "好樂團", "title": "我把我的青春給你", "note": ""}, {"lang": "中文", "artist": "老王樂團", "title": "我還年輕 我還年輕", "note": ""}, {"lang": "中文", "artist": "吾橋有水", "title": "少女變成了一隻甲蟲", "note": ""}, {"lang": "中文", "artist": "告五人", "title": "你要不要吃哈密瓜", "note": ""}, {"lang": "中文", "artist": "告五人", "title": "披星戴月的想你", "note": ""}, {"lang": "中文", "artist": "告五人", "title": "帶我去找夜生活", "note": ""}, {"lang": "中文", "artist": "李友廷", "title": "直到我遇見了你", "note": ""}, {"lang": "中文", "artist": "那我懂你意思了", "title": "所以我停下來", "note": ""}, {"lang": "中文", "artist": "那我懂你意思了", "title": "沒有人在乎你在乎的事", "note": ""}, {"lang": "中文", "artist": "兔子牙", "title": "小白兔遇上卡布奇諾", "note": ""}, {"lang": "中文", "artist": "房東的貓", "title": "你是我最愚蠢的一次浪漫", "note": ""}, {"lang": "中文", "artist": "牧瀨", "title": "我的世界不是只有你", "note": ""}, {"lang": "中文", "artist": "阿肆", "title": "致姍姍來遲的你", "note": ""}, {"lang": "中文", "artist": "阿肆", "title": "我在人民廣場吃炸雞", "note": ""}, {"lang": "中文", "artist": "范曉萱&100%", "title": "管他什麼音樂", "note": ""}, {"lang": "中文", "artist": "孫盛希&sunkis", "title": "不要讓我後悔", "note": ""}, {"lang": "中文", "artist": "容祖兒", "title": "揮動翅膀的女孩", "note": ""}, {"lang": "中文", "artist": "馬念先&9m88", "title": "你朝我的方向走來", "note": ""}, {"lang": "中文", "artist": "康士坦的變化球", "title": "美好的事可不可以發生在我身上", "note": ""}, {"lang": "中文", "artist": "張震嶽", "title": "思念是一種病", "note": ""}, {"lang": "中文", "artist": "理想混蛋", "title": "你留給我的遺憾無以名狀", "note": ""}, {"lang": "中文", "artist": "理想混蛋", "title": "我反芻著你留下的寂寞", "note": ""}, {"lang": "中文", "artist": "理想混蛋", "title": "不是因為天氣晴朗才愛你", "note": ""}, {"lang": "中文", "artist": "甜約翰", "title": "留給你的我從未", "note": ""}, {"lang": "中文", "artist": "甜約翰", "title": "城市的浪漫運作", "note": ""}, {"lang": "中文", "artist": "溫室雜草", "title": "那天我們看著星夜", "note": ""}, {"lang": "中文", "artist": "溫室雜草", "title": "在這個年代，我們不浪漫", "note": ""}, {"lang": "中文", "artist": "綠繡眼Zos", "title": "願溫柔的妳被世界溫柔以待", "note": ""}, {"lang": "中文", "artist": "趙之璧", "title": "在你和天空之間", "note": ""}, {"lang": "中文", "artist": "盧廣仲", "title": "刻在我心底的名字", "note": ""}, {"lang": "中文", "artist": "謝和弦", "title": "愛不需要裝乖", "note": ""}, {"lang": "中文", "artist": "謝和弦", "title": "女孩你知道嗎", "note": ""}, {"lang": "中文", "artist": "魏如昀", "title": "聽見下雨的聲音", "note": ""}, {"lang": "中文", "artist": "魏如萱＆馬頔", "title": "星期三或禮拜三", "note": ""}, {"lang": "中文", "artist": "Diiton", "title": "我站在雲林，輸得徹底", "note": ""}, {"lang": "中文", "artist": "Limi", "title": "我的夜晚是不是你的白天", "note": ""}, {"lang": "中文", "artist": "Limi", "title": "世界很大，而我", "note": ""}, {"lang": "中文", "artist": "Marz23", "title": "我不是饒舌歌手", "note": ""}, {"lang": "中文", "artist": "TRASH", "title": "重感情的廢物", "note": ""}, {"lang": "中文", "artist": "Crispy", "title": "揹上悲傷北上", "note": ""}, {"lang": "中文", "artist": "派偉俊&李浩瑋", "title": "I Hate Myself Sometimes", "note": ""}, {"lang": "中文", "artist": "Maderlin Weng", "title": "無法抗拒的你", "note": ""}, {"lang": "中文", "artist": "怕胖團", "title": "我沒有用，沒辦法給你想要的生活", "note": ""}, {"lang": "中文", "artist": "冰球樂團", "title": "能不能和我留在台北", "note": ""}, {"lang": "中文", "artist": "盧廣仲", "title": "太陽與地球", "note": ""}, {"lang": "日文", "artist": "手嶌葵", "title": "テルーの唄", "note": ""}, {"lang": "日文", "artist": "初音", "title": "独りんぼエンヴィー", "note": ""}, {"lang": "日文", "artist": "初音", "title": "僕みたいな君 君みたいな僕", "note": ""}, {"lang": "日文", "artist": "初音ミク", "title": "からくりピエロ", "note": ""}, {"lang": "日文", "artist": "初音ミク", "title": "千本桜", "note": ""}, {"lang": "日文", "artist": "初音ミク", "title": "世界で一番お姫様", "note": ""}, {"lang": "日文", "artist": "初音ミク", "title": "ローリンガール", "note": ""}, {"lang": "日文", "artist": "奇天烈大百科", "title": "はじめてのチュウ", "note": ""}, {"lang": "日文", "artist": "泣き虫☔︎", "title": "大迷惑星", "note": ""}, {"lang": "日文", "artist": "花澤香菜", "title": "戀愛循環", "note": ""}, {"lang": "日文", "artist": "高橋洋子", "title": "残酷な天使のテーゼ", "note": ""}, {"lang": "日文", "artist": "堂村璃羽", "title": "都合いい関係", "note": ""}, {"lang": "日文", "artist": "理芽", "title": "食虫植物", "note": ""}, {"lang": "日文", "artist": "凛として時雨", "title": "unravel", "note": ""}, {"lang": "日文", "artist": "鏡音リン", "title": "メランコリック", "note": ""}, {"lang": "日文", "artist": "Ado", "title": "踊 (副歌以外會ㄋ)", "note": ""}, {"lang": "日文", "artist": "Aimer", "title": "カタオモイ", "note": ""}, {"lang": "日文", "artist": "Aimer", "title": "Ref:rain", "note": ""}, {"lang": "日文", "artist": "DECO*27", "title": "妄想税", "note": ""}, {"lang": "日文", "artist": "DECO*27", "title": "弱虫モンブラン", "note": ""}, {"lang": "日文", "artist": "DECO*27", "title": "愛言葉", "note": ""}, {"lang": "日文", "artist": "DECO*27", "title": "ヴァンパイア", "note": ""}, {"lang": "日文", "artist": "DECO*27", "title": "エゴママ", "note": ""}, {"lang": "日文", "artist": "GUMI", "title": "天ノ弱", "note": ""}, {"lang": "日文", "artist": "GUMI", "title": "心做し", "note": ""}, {"lang": "日文", "artist": "GUMI", "title": "会いたい", "note": ""}, {"lang": "日文", "artist": "GUMI", "title": "視力檢查", "note": ""}, {"lang": "日文", "artist": "Wanuka(和ぬか－)", "title": "Tipsy (寄り酔い)", "note": ""}, {"lang": "日文", "artist": "Miki Matsubara", "title": "Stay With Me", "note": ""}, {"lang": "日文", "artist": "YOASOBI", "title": "夜に駆ける", "note": ""}, {"lang": "日文", "artist": "YOASOBI", "title": "怪物", "note": ""}, {"lang": "日文", "artist": "YOASOBI", "title": "群青", "note": ""}, {"lang": "日文", "artist": "YOASOBI", "title": "アイドル", "note": ""}, {"lang": "日文", "artist": "じん", "title": "アヤノの幸福理論", "note": ""}, {"lang": "日文", "artist": "みきとP", "title": "小夜子", "note": ""}, {"lang": "日文", "artist": "みきとP", "title": "心臓デモクラシー", "note": ""}, {"lang": "日文", "artist": "みきとP", "title": "サリシノハラ", "note": ""}, {"lang": "日文", "artist": "ヨルシカ", "title": "說吧", "note": ""}, {"lang": "日文", "artist": "コレサワ", "title": "たばこ (Tabako)", "note": ""}, {"lang": "日文", "artist": "tuki", "title": "晩餐歌", "note": ""}, {"lang": "日文", "artist": "放課後ティータイム", "title": "わたしの恋はホッチキス/我的戀愛像是釘書機", "note": ""}, {"lang": "日文", "artist": "ヨルシカ", "title": "晴る", "note": ""}, {"lang": "日文", "artist": "友成空", "title": "睨めっ娘", "note": ""}, {"lang": "日文", "artist": "", "title": "死神舞踊", "note": ""}, {"lang": "日文", "artist": "AKASAKI", "title": "Bunny Girl", "note": ""}, {"lang": "日文", "artist": "藤井風", "title": "死ぬのがいいわ", "note": ""}, {"lang": "日文", "artist": "乃紫", "title": "初恋キラー", "note": ""}, {"lang": "日文", "artist": "Yukopi", "title": "強風オールバック", "note": ""}, {"lang": "日文", "artist": "MONGOL800", "title": "小さな恋のうた", "note": ""}, {"lang": "日文", "artist": "supercell", "title": "My Dearst (罪惡王冠OP)", "note": ""}, {"lang": "日文", "artist": "つじあやの", "title": "風になる", "note": ""}, {"lang": "日文", "artist": "松原みき", "title": "Stay With Me", "note": ""}, {"lang": "日文", "artist": "生物股長", "title": "青鳥", "note": ""}, {"lang": "日文", "artist": "Yui", "title": "Again", "note": ""}, {"lang": "日文", "artist": "Yui", "title": "Rolling Star", "note": ""}, {"lang": "日文", "artist": "Sanghee さんひ", "title": "ほろよい", "note": ""}, {"lang": "英文", "artist": "Billie Eilish", "title": "Bad Guy", "note": ""}, {"lang": "英文", "artist": "Sia", "title": "Cheap Thrill", "note": ""}, {"lang": "英文", "artist": "Takeo Ischi", "title": "Chicken Attack", "note": ""}, {"lang": "英文", "artist": "Oh Wonder", "title": "Drive", "note": ""}, {"lang": "英文", "artist": "keshi", "title": "Drunk", "note": ""}, {"lang": "英文", "artist": "Alina Baraz", "title": "Electric", "note": ""}, {"lang": "英文", "artist": "Camila Cabello", "title": "Havana", "note": ""}, {"lang": "英文", "artist": "Oh Wonder", "title": "I Wish I Never Met You", "note": ""}, {"lang": "英文", "artist": "Bruno Mars", "title": "Just the Way You Are", "note": ""}, {"lang": "英文", "artist": "", "title": "Last Christmas", "note": ""}, {"lang": "英文", "artist": "Ellie Goulding", "title": "Love Me Like You Do", "note": ""}, {"lang": "英文", "artist": "Yerin Baek", "title": "Lovegame", "note": ""}, {"lang": "英文", "artist": "Rixton", "title": "Me and my broken heart", "note": ""}, {"lang": "英文", "artist": "Meghan Trainor", "title": "Me Too", "note": ""}, {"lang": "英文", "artist": "Lana Del Rey", "title": "Once Upon A Dream", "note": ""}, {"lang": "英文", "artist": "Parry Gripp&BooneBum", "title": "Raining tacos", "note": ""}, {"lang": "英文", "artist": "DPR IAN", "title": "Scaredy Cat", "note": ""}, {"lang": "英文", "artist": "PINK GUY", "title": "STFU", "note": ""}, {"lang": "英文", "artist": "Post Malone", "title": "Sunflower", "note": ""}, {"lang": "英文", "artist": "Bruno Mars", "title": "The Lazy Song", "note": ""}, {"lang": "英文", "artist": "Maroon 5", "title": "This Love", "note": ""}, {"lang": "英文", "artist": "Britney Spears", "title": "Toxic", "note": ""}, {"lang": "英文", "artist": "Oh Wonder", "title": "Without You", "note": ""}, {"lang": "英文", "artist": "The Cranberries", "title": "Zombie", "note": ""}, {"lang": "英文", "artist": "Backstreet Boys", "title": "I Want It That Way", "note": ""}, {"lang": "英文", "artist": "Huntrix", "title": "Golden (練習)", "note": ""}, {"lang": "英文", "artist": "Charlie Puth", "title": "light switch", "note": ""}, {"lang": "英文", "artist": "Rosa Walton", "title": "I Really Want to Stay at Your House", "note": ""}, {"lang": "英文", "artist": "Carole and Tuesday", "title": "The Loneliest Girl", "note": ""}, {"lang": "英文", "artist": "yung kai", "title": "Blue", "note": ""}, {"lang": "英文", "artist": "Stephen Sanchez", "title": "Until I Found You", "note": ""}, {"lang": "英文", "artist": "Marshmello & Anne-Marie", "title": "FRIENDS", "note": ""}, {"lang": "台語", "artist": "囝仔", "title": "扛壩子", "note": ""}, {"lang": "台語", "artist": "江蕙", "title": "傷心酒店", "note": ""}, {"lang": "台語", "artist": "江蕙", "title": "再會了心愛的無緣的人", "note": ""}, {"lang": "台語", "artist": "江蕙", "title": "風吹風吹", "note": ""}, {"lang": "台語", "artist": "兒歌", "title": "丟丟銅仔", "note": ""}, {"lang": "台語", "artist": "美秀集團", "title": "心悶", "note": ""}, {"lang": "台語", "artist": "茄子蛋", "title": "浪流連", "note": ""}, {"lang": "台語", "artist": "茄子蛋", "title": "浪子回頭", "note": ""}, {"lang": "台語", "artist": "張惠妹", "title": "好膽你就來", "note": ""}, {"lang": "台語", "artist": "黃乙玲", "title": "海波浪", "note": ""}, {"lang": "台語", "artist": "黃乙玲", "title": "愛到才知痛", "note": ""}];
@@ -380,7 +458,7 @@ document.querySelectorAll("[data-link]").forEach(a=>a.href=CONFIG[a.dataset.link
 let ui=T[CONFIG.defaultLanguage]?CONFIG.defaultLanguage:"zh";
 try{const s=localStorage.getItem("songbook-ui");if(T[s])ui=s}catch(e){}
 {const h=(location.hash||"").slice(1).toLowerCase();if(T[h])ui=h}
-const tr=k=>(T[ui][k]!==undefined?T[ui][k]:T.zh[k]);
+const tr=k=>{if(REQ&&T.zh[k+"Req"]!==undefined)k+="Req";return T[ui][k]!==undefined?T[ui][k]:T.zh[k]};
 const langLabel=l=>T[ui].langs[l]||l;
 let jaFontLoaded=false;
 function applyUI(){
@@ -397,6 +475,7 @@ function applyUI(){
   const STAR='<svg viewBox="0 0 20 20"><path d="M10 0C11 7 13 9 20 10C13 11 11 13 10 20C9 13 7 11 0 10C7 9 9 7 10 0Z" fill="#fff"/></svg>';
   $("track").innerHTML=`<span>SONG REQUEST ${STAR} TWITCH &amp; YOUTUBE ${STAR} <b>${tr("marquee")}</b> ${STAR} OUO_RABBIT ${STAR}</span>`.repeat(4);
   showSync();showPick();buildControls();render();
+  if(REQ)showBanner();
 }
 document.addEventListener("click",e=>{
   const b=e.target.closest("[data-ui]");if(!b)return;
@@ -437,9 +516,9 @@ function render(){
   document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===lang));
   document.querySelectorAll("[data-sort]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.sort===sort));
   const r=visible();
-  $("list").innerHTML=r.length?r.map(s=>{const L=esc(langLabel(s.lang));return `<li data-no="${s.no}"><button class="row" type="button" data-no="${s.no}" aria-label="${esc(tr("copyLabel")(CONFIG.copyPrefix+s.title))}">
+  $("list").innerHTML=r.length?r.map(s=>{const L=esc(langLabel(s.lang));const td=requestedToday(s);return `<li data-no="${s.no}"${td?' class="req-today"':""}><button class="row" type="button" data-no="${s.no}" aria-label="${esc(tr("copyLabel")(REQ?s.title:CONFIG.copyPrefix+s.title))}">
       <span class="no">${s.no}</span>
-      <span class="song"><span class="title">${esc(s.title)}${s.note?`<span class="note">${esc(s.note)}</span>`:""}</span><span class="artist"><span class="tag mini" style="--c:${colorOf(s.lang)}">${L}</span>${esc(s.artist||"—")}</span></span>
+      <span class="song"><span class="title">${esc(s.title)}${s.note?`<span class="note">${esc(s.note)}</span>`:""}${td?`<span class="today">${esc(tr("todayBadge"))}</span>`:""}</span><span class="artist"><span class="tag mini" style="--c:${colorOf(s.lang)}">${L}</span>${esc(s.artist||"—")}</span></span>
       <span class="tag col" style="--c:${colorOf(s.lang)}">${L}</span>
       <span class="req"><img src="${EGG}" alt=""><span class="t">${esc(tr("req"))}</span></span>
     </button></li>`}).join(""):`<li class="empty">${esc(tr("empty"))}</li>`;
@@ -453,7 +532,7 @@ async function copy(s){
   catch(e){toast(tr("manual")(text),3500)}
 }
 const byNo=n=>SONGS.find(s=>s.no===+n);
-$("list").addEventListener("click",e=>{const b=e.target.closest(".row");if(b)copy(byNo(b.dataset.no))});
+$("list").addEventListener("click",e=>{const b=e.target.closest(".row");if(!b)return;const s=byNo(b.dataset.no);REQ?openReq(s):copy(s)});
 $("q").addEventListener("input",e=>{q=e.target.value.trim();render()});
 
 function markHit(s,scroll){
@@ -479,9 +558,9 @@ function pickOne(){
   picked=s;showPick();
   const pk=$("pick");pk.classList.remove("spin");void pk.offsetWidth;pk.classList.add("spin");
   const asideVisible=matchMedia("(min-width:1001px)").matches;
-  markHit(s,!asideVisible);copy(s);
+  markHit(s,!asideVisible);if(!REQ)copy(s);
 }
-$("pickCopy").addEventListener("click",()=>{if(picked)copy(picked)});
+$("pickCopy").addEventListener("click",()=>{if(picked)REQ?openReq(picked):copy(picked)});
 const topBtn=$("totop");
 addEventListener("scroll",()=>{topBtn.hidden=scrollY<700},{passive:true});
 topBtn.onclick=()=>scrollTo({top:0,behavior:"smooth"});
@@ -513,11 +592,11 @@ async function loadSheet(){
   if(!CONFIG.sheetId){syncState="builtin";showSync();return}
   const ctrl=new AbortController();const timer=setTimeout(()=>ctrl.abort(),12000);
   try{
-    const url=`https://docs.google.com/spreadsheets/d/${CONFIG.sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(CONFIG.sheetName)}&_=${Date.now()}`;
+    const url=`https://docs.google.com/spreadsheets/d/${CONFIG.sheetId}/gviz/tq?tqx=out:csv&headers=1&sheet=${encodeURIComponent(CONFIG.sheetName)}&_=${Date.now()}`;
     const res=await fetch(url,{cache:"no-store",signal:ctrl.signal});if(!res.ok)throw new Error(res.status);
     const rows=parseCSV(await res.text()).map(r=>r.map(c=>c.trim()));
     if(!rows.length)throw new Error("empty");
-    const h=rows[0];const ix=k=>h.findIndex(c=>c.includes(k));
+    const h=rows[0];if(h.some(c=>c.length>40))throw new Error("header");const ix=k=>h.findIndex(c=>c.includes(k));
     let li=ix("語言"),ai=ix("歌手"),ti=ix("歌名"),ni=ix("備註");let body=rows.slice(1);
     if(ti<0){li=0;ai=1;ti=2;ni=3;body=rows}
     const list=body.map(r=>({lang:(r[li]||"其他"),artist:r[ai]||"",title:r[ti]||"",note:ni>=0?(r[ni]||""):""})).filter(s=>s.title);
@@ -526,6 +605,89 @@ async function loadSheet(){
   }catch(e){syncState=syncState==="checking"?"cached":"fallback";showSync()}
   finally{clearTimeout(timer)}
 }
+/* ---------- 網頁點歌（requestUrl 有設定才會用到） ---------- */
+const normT=s=>String(s==null?"":s).toLowerCase().replace(/\.[a-z0-9]{2,4}$/,"").replace(/[\s\-_()\[\]（）【】·・,，.。!！?？'"「」《》\/\\]/g,"");
+let todaySet=new Set(),todayList=[],rqSong=null,rqBusy=false;
+/* 後台回報「現在開不開放網頁點歌」（UtaStage 開著、而且勾了網頁點歌才開放）；還不知道之前先當作開放 */
+let rqOpen=true;
+function requestedToday(s){
+  if(!todaySet.size)return false;
+  const k=normT(s.title);if(!k)return false;
+  if(todaySet.has(k))return true;
+  /* 聊天室點的歌名可能多打了字（例如「點歌 紅色高跟鞋 蔡健雅」）→ 包含整個歌名也算 */
+  return k.length>=2&&todayList.some(t=>t.length>k.length&&t.includes(k));
+}
+function setToday(titles){
+  todayList=(titles||[]).map(normT).filter(Boolean);todaySet=new Set(todayList);render();
+}
+async function api(method,params,body){
+  const ctrl=new AbortController();const timer=setTimeout(()=>ctrl.abort(),15000);
+  try{
+    const url=CONFIG.requestUrl+(params?(CONFIG.requestUrl.includes("?")?"&":"?")+new URLSearchParams(params):"");
+    const res=await fetch(url,method==="POST"?{method:"POST",body:JSON.stringify(body),headers:{"Content-Type":"text/plain;charset=utf-8"},signal:ctrl.signal}
+                                               :{cache:"no-store",signal:ctrl.signal});
+    return await res.json();
+  }finally{clearTimeout(timer)}
+}
+function setOpen(v){
+  if(v===undefined)return;
+  rqOpen=!!v;showBanner();if(rqSong)refreshReq();
+}
+function showBanner(){
+  const b=$("rqBanner");if(!b)return;
+  const off=REQ&&!rqOpen;
+  b.hidden=!off;if(off)b.textContent=tr("closed");
+}
+async function loadToday(){
+  if(!REQ)return;
+  try{const j=await api("GET",{action:"today",_:Date.now()});if(j&&j.ok){setOpen(j.open);setToday(j.titles)}}catch(e){}
+}
+function refreshReq(){
+  const s=rqSong;if(!s)return;
+  const done=requestedToday(s);
+  $("rqDone").hidden=!done;$("rqDone").textContent=tr("rqDone");
+  const why=done||rqOpen?"":tr("closed");
+  $("rqWhy").hidden=!why;$("rqWhy").textContent=why;
+  if(!rqBusy)$("rqOk").disabled=done||!rqOpen;
+}
+function openReq(s){
+  if(!s)return;rqSong=s;rqBusy=false;
+  $("rqTitle").textContent=tr("rqTitle");$("rqNote").innerHTML=tr("rqNote");
+  $("rqSong").textContent=s.title;$("rqArtist").textContent=s.artist||"";
+  $("rqCancel").textContent=tr("rqCancel");$("rqOk").textContent=tr("rqOk");
+  $("rqCopy").textContent=tr("rqCopy");
+  refreshReq();
+  $("rq").hidden=false;
+  setTimeout(()=>($("rqOk").disabled?$("rqCancel"):$("rqOk")).focus(),30);
+  loadToday().then(()=>{if(rqSong===s)refreshReq()});      // 現在開不開放、今天點過哪些：問最新的
+}
+function closeReq(){$("rq").hidden=true;rqSong=null}
+async function sendReq(){
+  const s=rqSong;if(!s||rqBusy)return;
+  rqBusy=true;$("rqOk").disabled=true;$("rqOk").textContent=tr("rqSending");
+  let j=null;
+  try{j=await api("POST",null,{action:"request",title:s.title,artist:s.artist})}catch(e){}
+  rqBusy=false;$("rqOk").textContent=tr("rqOk");
+  if(j&&j.ok){
+    setOpen(j.open);if(j.titles)setToday(j.titles);
+    closeReq();markHit(s,false);toast(j.dup?tr("reqDup"):tr("reqOk")(s.title),3200);return;
+  }
+  /* 失敗：原因寫在小視窗裡（不只是一閃而過的提示），觀眾才不會以為壞掉 */
+  const err=j&&j.err;
+  if(err==="closed"){setOpen(false);toast(tr("closed"),3800);return}
+  const msg=err==="busy"?tr("errBusy"):err==="notfound"?tr("errNotfound"):tr("errNet");
+  refreshReq();
+  $("rqWhy").hidden=false;$("rqWhy").textContent=msg;
+  if(err==="busy"||!err)$("rqOk").disabled=false;
+  toast(msg,3800);
+}
+$("rq").addEventListener("click",e=>{if(e.target===$("rq")||e.target.closest("[data-rq-close]"))closeReq()});
+$("rqOk").addEventListener("click",sendReq);
+$("rqCopy").addEventListener("click",()=>{const s=rqSong;closeReq();if(s)copy(s)});
+addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("rq").hidden)closeReq()});
+if(REQ){loadToday();setInterval(()=>{if(!document.hidden)loadToday()},60000);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)loadToday()})}
+
 {const c=readCache();if(c){SONGS=c.map((s,i)=>({...s,no:i+1}));syncState="checking"}}
 applyUI();loadSheet();
 </script>
